@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     private PlayerController _player;
     private EnemyController _enemy;
     private Vector3 _playerStartPosition = new Vector3(0, 1, 0);
+    private bool _onPause;
+    private bool _gameOver;
 
     private void Awake()
     {
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         uiController.ShowGameOver();
+        _gameOver = true;
     }
 
     private void InstantiateEnemy()
@@ -59,6 +62,30 @@ public class GameManager : MonoBehaviour
         float z = Random.Range(-halfHeight, halfHeight);
         
         return new Vector3(x, 1, z);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            ChangeMenuVisibility();
+    }
+
+    private void ChangeMenuVisibility()
+    {
+        if (_gameOver) return;
+        
+        if(!_onPause)
+        {
+            Time.timeScale = 0;
+            uiController.ShowUpgradeMenu(true);
+            _onPause = true;
+        }
+        else
+        {
+            Time.timeScale = 1;
+            uiController.ShowUpgradeMenu(false);
+            _onPause = false;
+        }
     }
 
     private void OnDestroy()
