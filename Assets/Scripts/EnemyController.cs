@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour, ITarget
 {
+    public event Action OnEnemyDeath;
+    
     [SerializeField] 
     private BulletController bulletPrefab;
 
@@ -16,32 +18,40 @@ public class EnemyController : MonoBehaviour, ITarget
     private int _healthCurrent = 30;
     private const string TargetTag = "Player";
     private Transform _transform;
+    private GameObject _gameObject;
 
     public void ReceiveDamage(int damage)
     {
         _healthCurrent -= damage;
-        
-        if(_healthCurrent <= 0)
-            Debug.Log("Enemy dead!");
+
+        if (_healthCurrent <= 0)
+        {
+            StopCoroutine(WaitToShootBullet());
+            _gameObject.SetActive(false);
+            OnEnemyDeath?.Invoke();
+        }
+    }
+
+    public void ActivateEnemy(Vector3 location)
+    {
+        _transform.position = location;
+        _healthCurrent = _healthMax;
+        _gameObject.SetActive(true);
+        StartCoroutine(WaitToShootBullet());
     }
     
-    
-
     private void Awake()
     {
+        _gameObject = gameObject;
         _transform = transform;
         _bulletsPool = new List<BulletController>();
-    }
-
-    private void Start()
-    {
         StartCoroutine(WaitToShootBullet());
     }
 
     private IEnumerator WaitToShootBullet()
     {
-        ShootBullet();
         yield return new WaitForSeconds(1);
+        ShootBullet();
         StartCoroutine(WaitToShootBullet());
     }
 

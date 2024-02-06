@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour, ITarget
     private float _rotationSpeed = 100f;
     private int _healthMax = 100;
     private int _healthCurrent = 100;
-    private int _damage = 20;
+    private int _damage = 10;
     private float _bulletSpeed = 10;
     private Transform _transform;
     private List<BulletController> _bulletsPool;

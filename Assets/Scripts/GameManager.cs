@@ -31,6 +31,12 @@ public class GameManager : MonoBehaviour
     private void InstantiateEnemy()
     {
         _enemy = Instantiate(_enemyPrefab, GetEnemyPosition(), Quaternion.identity);
+        _enemy.OnEnemyDeath += OnEnemyDeath;
+    }
+
+    private void OnEnemyDeath()
+    {
+        _enemy.ActivateEnemy(GetEnemyPosition());
     }
 
     private Vector3 GetEnemyPosition()
@@ -44,5 +50,10 @@ public class GameManager : MonoBehaviour
         float z = Random.Range(-halfHeight, halfHeight);
         
         return new Vector3(x, 1, z);
+    }
+
+    private void OnDestroy()
+    {
+        _enemy.OnEnemyDeath -= OnEnemyDeath;
     }
 }

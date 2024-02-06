@@ -52,13 +52,19 @@ public class BulletController : MonoBehaviour
     {
         if (other.gameObject.CompareTag(BorderTag))
         {
-            gameObject.SetActive(false);
-            _isMoving = false;
+            SetInactive();
         }
         else if (other.gameObject.CompareTag(_targetTag))
         {
+            SetInactive();
             other.GetComponent<ITarget>()?.ReceiveDamage(_damage);
             Debug.Log("Hit player!");
         }
+    }
+
+    private void SetInactive()
+    {
+        gameObject.SetActive(false);
+        _isMoving = false;
     }
 }
