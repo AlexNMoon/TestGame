@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour, ITarget
 {
@@ -13,6 +15,7 @@ public class EnemyController : MonoBehaviour, ITarget
     private int _healthMax = 30;
     private int _healthCurrent = 30;
     private const string TargetTag = "Player";
+    private Transform _transform;
 
     public void ReceiveDamage(int damage)
     {
@@ -21,10 +24,15 @@ public class EnemyController : MonoBehaviour, ITarget
         if(_healthCurrent <= 0)
             Debug.Log("Enemy dead!");
     }
-    
+
+    private void Awake()
+    {
+        _transform = transform;
+        _bulletsPool = new List<BulletController>();
+    }
+
     private void Start()
     {
-        _bulletsPool = new List<BulletController>();
         StartCoroutine(WaitToShootBullet());
     }
 
@@ -47,13 +55,13 @@ public class EnemyController : MonoBehaviour, ITarget
 
         if (bullet == null)
         {
-            bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(new Vector3(0, 0, 90)), transform);
+            bullet = Instantiate(bulletPrefab, _transform.position, Quaternion.identity, _transform);
             bullet.Init(_damage, TargetTag, _bulletSpeed);
             _bulletsPool.Add(bullet);
         }
         else
         {
-            bullet.Reset(transform.position);
+            bullet.ResetPosition(_transform.position);
         }
 
         return bullet;

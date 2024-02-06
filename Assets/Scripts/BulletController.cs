@@ -35,7 +35,7 @@ public class BulletController : MonoBehaviour
         _isMoving = true;
     }
 
-    public void Reset(Vector3 position)
+    public void ResetPosition(Vector3 position)
     {
         _transform.position = position;
         gameObject.SetActive(true);
