@@ -58,6 +58,7 @@ public class BulletController : MonoBehaviour
         else if (other.gameObject.CompareTag(_targetTag))
         {
             other.GetComponent<ITarget>()?.ReceiveDamage(_damage);
+            Debug.Log("Hit player!");
         }
     }
 }

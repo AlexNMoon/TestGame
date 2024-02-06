@@ -10,9 +10,18 @@ public class EnemyController : MonoBehaviour, ITarget
     private List<BulletController> _bulletsPool;
     private int _damage = 20;
     private float _bulletSpeed = 10;
-    private int _health = 30;
+    private int _healthMax = 30;
+    private int _healthCurrent = 30;
     private const string TargetTag = "Player";
 
+    public void ReceiveDamage(int damage)
+    {
+        _healthCurrent -= damage;
+        
+        if(_healthCurrent <= 0)
+            Debug.Log("Enemy dead!");
+    }
+    
     private void Start()
     {
         _bulletsPool = new List<BulletController>();
@@ -22,7 +31,7 @@ public class EnemyController : MonoBehaviour, ITarget
     private IEnumerator WaitToShootBullet()
     {
         ShootBullet();
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         StartCoroutine(WaitToShootBullet());
     }
 
@@ -55,10 +64,5 @@ public class EnemyController : MonoBehaviour, ITarget
         float y = Random.Range(0, 360);
         Vector3 rotation = new Vector3(0, y, 90);
         return rotation;
-    }
-
-    public void ReceiveDamage(int damage)
-    {
-        
     }
 }

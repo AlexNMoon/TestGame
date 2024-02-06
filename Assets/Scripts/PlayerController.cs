@@ -10,9 +10,18 @@ public class PlayerController : MonoBehaviour, ITarget
     private Rigidbody playerRigidbody;
     
     private float _speed = 4.0f;
-    private int _health = 100;
+    private int _healthMax = 100;
+    private int _healthCurrent = 100;
     private Transform _transform;
 
+    public void ReceiveDamage(int damage)
+    {
+        _healthCurrent -= damage;
+        
+        if(_healthCurrent <= 0)
+            Debug.Log("Player dead!");
+    }
+    
     private void Awake()
     {
         _transform = transform;
@@ -32,10 +41,5 @@ public class PlayerController : MonoBehaviour, ITarget
         position += _transform.forward * (z * Time.deltaTime * _speed);
         position += _transform.right * (x * Time.deltaTime * _speed);
         playerRigidbody.position = position;
-    }
-
-    public void ReceiveDamage(int damage)
-    {
-        
     }
 }
