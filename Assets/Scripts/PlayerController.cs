@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ITarget
 {
     [SerializeField] 
     private Rigidbody playerRigidbody;
     
     private float _speed = 4.0f;
+    private int _health = 100;
     private Transform _transform;
 
     private void Awake()
@@ -31,5 +32,10 @@ public class PlayerController : MonoBehaviour
         position += _transform.forward * (z * Time.deltaTime * _speed);
         position += _transform.right * (x * Time.deltaTime * _speed);
         playerRigidbody.position = position;
+    }
+
+    public void ReceiveDamage(int damage)
+    {
+        
     }
 }

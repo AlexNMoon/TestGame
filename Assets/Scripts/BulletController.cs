@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BulletController : MonoBehaviour
 {
     [SerializeField] 
@@ -12,7 +13,7 @@ public class BulletController : MonoBehaviour
     private bool _isMoving;
     private string _targetTag;
     private int _damage;
-    private int _speed;
+    private float _speed;
     
     private const string BorderTag = "Border";
 
@@ -21,7 +22,7 @@ public class BulletController : MonoBehaviour
         _transform = transform;
     }
 
-    public void Init(int damage, string target, int speed)
+    public void Init(int damage, string target, float speed)
     {
         _damage = damage;
         _targetTag = target;
@@ -53,6 +54,10 @@ public class BulletController : MonoBehaviour
         {
             gameObject.SetActive(false);
             _isMoving = false;
+        }
+        else if (other.gameObject.CompareTag(_targetTag))
+        {
+            other.GetComponent<ITarget>()?.ReceiveDamage(_damage);
         }
     }
 }

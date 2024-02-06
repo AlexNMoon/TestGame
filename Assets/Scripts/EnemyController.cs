@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, ITarget
 {
     [SerializeField] 
     private BulletController bulletPrefab;
 
     private List<BulletController> _bulletsPool;
     private int _damage = 20;
-    private int _bulletSpeed = 10;
+    private float _bulletSpeed = 10;
+    private int _health = 30;
     private const string TargetTag = "Player";
 
     private void Start()
@@ -54,5 +55,10 @@ public class EnemyController : MonoBehaviour
         float y = Random.Range(0, 360);
         Vector3 rotation = new Vector3(0, y, 90);
         return rotation;
+    }
+
+    public void ReceiveDamage(int damage)
+    {
+        
     }
 }
