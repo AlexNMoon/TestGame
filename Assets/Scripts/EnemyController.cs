@@ -24,6 +24,8 @@ public class EnemyController : MonoBehaviour, ITarget
         if(_healthCurrent <= 0)
             Debug.Log("Enemy dead!");
     }
+    
+    
 
     private void Awake()
     {
