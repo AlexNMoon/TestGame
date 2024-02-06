@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour, ITarget
 {
+    public event Action OnPlayerDeath;
+    
     [SerializeField] 
     private Rigidbody playerRigidbody;
     [SerializeField] 
@@ -14,7 +16,7 @@ public class PlayerController : MonoBehaviour, ITarget
     private float _speed = 4.0f;
     private float _rotationSpeed = 100f;
     private int _healthMax = 100;
-    private int _healthCurrent = 100;
+    private int _healthCurrent = 10;
     private int _damage = 10;
     private float _bulletSpeed = 10;
     private Transform _transform;
@@ -27,7 +29,7 @@ public class PlayerController : MonoBehaviour, ITarget
         _healthCurrent -= damage;
         
         if(_healthCurrent <= 0)
-            Debug.Log("Player dead!");
+            OnPlayerDeath?.Invoke();
     }
     
     private void Awake()

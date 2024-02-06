@@ -7,11 +7,13 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] 
-    private EnemyController _enemyPrefab;
+    private EnemyController enemyPrefab;
     [SerializeField] 
-    private PlayerController _playerPrefab;
+    private PlayerController playerPrefab;
     [SerializeField] 
-    private Transform _fieldTransform;
+    private Transform fieldTransform;
+    [SerializeField] 
+    private UIController uiController;
 
     private PlayerController _player;
     private EnemyController _enemy;
@@ -25,12 +27,19 @@ public class GameManager : MonoBehaviour
 
     private void InstantiatePlayer()
     {
-        _player = Instantiate(_playerPrefab, _playerStartPosition, Quaternion.identity);
+        _player = Instantiate(playerPrefab, _playerStartPosition, Quaternion.identity);
+        _player.OnPlayerDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        Time.timeScale = 0;
+        uiController.ShowGameOver();
     }
 
     private void InstantiateEnemy()
     {
-        _enemy = Instantiate(_enemyPrefab, GetEnemyPosition(), Quaternion.identity);
+        _enemy = Instantiate(enemyPrefab, GetEnemyPosition(), Quaternion.identity);
         _enemy.OnEnemyDeath += OnEnemyDeath;
     }
 
@@ -41,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     private Vector3 GetEnemyPosition()
     {
-        var localScale = _fieldTransform.localScale;
+        var localScale = fieldTransform.localScale;
         
         float halfWidth = 5 * ((localScale.x - 0.5f) / 2);
         float x = Random.Range(-halfWidth, halfWidth);
@@ -55,5 +64,6 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         _enemy.OnEnemyDeath -= OnEnemyDeath;
+        _player.OnPlayerDeath -= OnPlayerDeath;
     }
 }
