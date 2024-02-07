@@ -15,3 +15,4 @@ MonoBehaviour:
   Damage: 20
   BulletSpeed: 10
   Health: 30
+  CoinsDroped: 10

@@ -8,4 +8,5 @@ public class EnemySettingsSO : ScriptableObject
     public int Damage;
     public float BulletSpeed;
     public int Health;
+    public int CoinsDroped;
 }

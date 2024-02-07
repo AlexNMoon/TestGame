@@ -24,9 +24,11 @@ public class GameManager : MonoBehaviour
     private Vector3 _playerStartPosition = new Vector3(0, 1, 0);
     private bool _onPause;
     private bool _gameOver;
+    private int _coins;
 
     private void Awake()
     {
+        uiController.SetUp();
         InstantiatePlayer();
         InstantiateEnemy();
     }
@@ -52,8 +54,10 @@ public class GameManager : MonoBehaviour
         _enemy.OnEnemyDeath += OnEnemyDeath;
     }
 
-    private void OnEnemyDeath()
+    private void OnEnemyDeath(int droppedCoins)
     {
+        _coins += droppedCoins;
+        uiController.ChangeCoins(_coins);
         _enemy.ActivateEnemy(GetEnemyPosition());
     }
 

@@ -10,6 +10,13 @@ public class UIController : MonoBehaviour
     private GameObject gameOverPanel;
     [SerializeField] 
     private GameObject upgradeMenuPanel;
+    [SerializeField] 
+    private TopPanelController topPanelController;
+
+    public void SetUp()
+    {
+        topPanelController.SetUp();
+    }
 
     public void ShowGameOver()
     {
@@ -21,5 +28,10 @@ public class UIController : MonoBehaviour
     {
         background.SetActive(show);
         upgradeMenuPanel.SetActive(show);
+    }
+
+    public void ChangeCoins(int coins)
+    {
+        topPanelController.SetCoins(coins);
     }
 }
