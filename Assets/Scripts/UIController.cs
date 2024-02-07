@@ -13,9 +13,9 @@ public class UIController : MonoBehaviour
     [SerializeField] 
     private TopPanelController topPanelController;
 
-    public void SetUp()
+    public void SetUp(int coinsAmount, int currentHealthAmount, int healthAmount, int strengthAmount, int dexterityAmount)
     {
-        topPanelController.SetUp();
+        topPanelController.SetUp(coinsAmount, currentHealthAmount, healthAmount, strengthAmount, dexterityAmount);
     }
 
     public void ShowGameOver()
@@ -33,5 +33,10 @@ public class UIController : MonoBehaviour
     public void ChangeCoins(int coins)
     {
         topPanelController.SetCoins(coins);
+    }
+
+    public void ChangeCurrentHealth(int health)
+    {
+        topPanelController.ChangeCurrentHealth(health);
     }
 }

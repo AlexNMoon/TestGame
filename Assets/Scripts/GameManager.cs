@@ -28,7 +28,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        uiController.SetUp();
+        uiController.SetUp(0, playerSettings.Health, playerSettings.Health, playerSettings.Damage,
+            playerSettings.Speed);
         InstantiatePlayer();
         InstantiateEnemy();
     }
@@ -37,7 +38,13 @@ public class GameManager : MonoBehaviour
     {
         _player = Instantiate(playerPrefab, _playerStartPosition, Quaternion.identity);
         _player.SetUp(playerSettings);
+        _player.OnPlayerDamage += OnPlayerDamage;
         _player.OnPlayerDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDamage(int healthLeft)
+    {
+        uiController.ChangeCurrentHealth(healthLeft);
     }
 
     private void OnPlayerDeath()

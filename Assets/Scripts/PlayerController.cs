@@ -7,7 +7,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, ITarget
 {
     public event Action OnPlayerDeath;
-    
+    public event Action<int> OnPlayerDamage; 
+
     [SerializeField] 
     private Rigidbody playerRigidbody;
     [SerializeField] 
@@ -26,9 +27,16 @@ public class PlayerController : MonoBehaviour, ITarget
     public void ReceiveDamage(int damage)
     {
         _health -= damage;
-        
-        if(_health <= 0)
+
+        if (_health <= 0)
+        {
+            OnPlayerDamage?.Invoke(0);
             OnPlayerDeath?.Invoke();
+        }
+        else
+        {
+            OnPlayerDamage?.Invoke(_health);
+        }
     }
 
     public void SetUp(PlayerSettingsSO settings)

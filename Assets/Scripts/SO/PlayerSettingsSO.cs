@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerSettings", menuName = "ScriptableObjects/PlayerSettings")]
 public class PlayerSettingsSO : ScriptableObject
 {
-    public float Speed;
+    public int Speed;
     public float RotationSpeed;
     public int Health;
     public int Damage ;
