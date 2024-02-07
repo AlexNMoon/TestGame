@@ -24,10 +24,11 @@ public class GameManager : MonoBehaviour
     private Vector3 _playerStartPosition = new Vector3(0, 1, 0);
     private bool _onPause;
     private bool _gameOver;
-    private int _coins;
+    private UpgradeController _upgradeController;
 
     private void Awake()
     {
+        _upgradeController = new UpgradeController(playerSettings);
         uiController.SetUp(playerSettings);
         InstantiatePlayer();
         InstantiateEnemy();
@@ -62,8 +63,8 @@ public class GameManager : MonoBehaviour
 
     private void OnEnemyDeath(int droppedCoins)
     {
-        _coins += droppedCoins;
-        uiController.ChangeCoins(_coins);
+        int coins = _upgradeController.IncrementCoins(droppedCoins);
+        uiController.ChangeCoins(coins);
         _enemy.ActivateEnemy(GetEnemyPosition());
     }
 
