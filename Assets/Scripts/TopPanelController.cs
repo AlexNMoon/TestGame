@@ -20,13 +20,15 @@ public class TopPanelController : MonoBehaviour
     [SerializeField] 
     private TMP_Text dexterityTimer;
 
-    public void SetUp(int coinsAmount, int currentHealthAmount, int healthAmount, int strengthAmount, int dexterityAmount)
+    public void SetUp(int coinsAmount, int healthAmount, int damageAmount, int speedAmount, int? currentHealthAmount = null)
     {
         coins.text = coinsAmount.ToString();
-        currentHealth.text = currentHealthAmount.ToString();
         health.text = healthAmount.ToString();
-        strength.text = strengthAmount.ToString();
-        dexterity.text = dexterityAmount.ToString();
+        strength.text = damageAmount.ToString();
+        dexterity.text = speedAmount.ToString();
+        
+        if(currentHealthAmount != null)
+            currentHealth.text = currentHealthAmount.ToString();
     }
 
     public void SetCoins(int coinsAmount)

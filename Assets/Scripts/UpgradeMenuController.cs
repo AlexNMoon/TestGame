@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,10 @@ using Button = UnityEngine.UI.Button;
 
 public class UpgradeMenuController : MonoBehaviour
 {
+    public event Action OnUpgradeHealthClick;
+    public event Action OnUpgradeSpeedClick;
+    public event Action OnUpgradeDamageClick;
+    
     [SerializeField] 
     private TMP_Text currentCoins;
     [SerializeField] 
@@ -42,29 +47,63 @@ public class UpgradeMenuController : MonoBehaviour
 
     private const string LevelText = "Lv ";
 
-    public void SetUp(PlayerSettingsSO settings)
+    public void SetUp(int coins, int health, int damage, int speed, int healthLevel, int damageLevel,
+        int speedLevel, int upgradePrice, bool upgradeButtonsInteractivity)
     {
-        currentCoins.text = "0";
-        currentVitality.text = settings.Health.ToString();
-        currentStrength.text = settings.Damage.ToString();
-        currentDexterity.text = settings.Speed.ToString();
-        currentVitalityLevel.text = LevelText + "1";
-        currentStrengthLevel.text = LevelText + "1";
-        currentDexterityLevel.text = LevelText + "1";
-        nextVitalityLevel.text = LevelText + "2";
-        nextStrengthLevel.text = LevelText + "2";
-        nextDexterityLevel.text = LevelText + "2";
-        upgradeVitalityPrice.text = settings.FirstUpgradePrice.ToString();
-        upgradeStrengthPrice.text = settings.FirstUpgradePrice.ToString();
-        upgradeDexterityPrice.text = settings.FirstUpgradePrice.ToString();
-        upgradeVitalityButton.interactable = false;
-        upgradeStrengthButton.interactable = false;
-        upgradeDexterityButton.interactable = false;
+        currentCoins.text = coins.ToString();
+        currentVitality.text = health.ToString();
+        currentStrength.text = damage.ToString();
+        currentDexterity.text = speed.ToString();
+        currentVitalityLevel.text = LevelText + healthLevel;
+        currentStrengthLevel.text = LevelText + damageLevel;
+        currentDexterityLevel.text = LevelText + speedLevel;
+        nextVitalityLevel.text = LevelText + (healthLevel + 1);
+        nextStrengthLevel.text = LevelText + (damageLevel + 1);
+        nextDexterityLevel.text = LevelText + (speedLevel + 1);
+        upgradeVitalityPrice.text = upgradePrice.ToString();
+        upgradeStrengthPrice.text = upgradePrice.ToString();
+        upgradeDexterityPrice.text = upgradePrice.ToString();
+        EnableUpgradeButtons(upgradeButtonsInteractivity);
     }
 
     public void ChangeCoins(int coins)
     {
         currentCoins.text = coins.ToString();
     }
-    
+
+    public void EnableUpgradeButtons(bool enable)
+    {
+        upgradeVitalityButton.interactable = enable;
+        upgradeStrengthButton.interactable = enable;
+        upgradeDexterityButton.interactable = enable;
+    }
+
+    private void OnEnable()
+    {
+        upgradeVitalityButton.onClick.AddListener(OnUpgradeHealthButtonClick);
+        upgradeDexterityButton.onClick.AddListener(OnUpgradeSpeedButtonClick);
+        upgradeStrengthButton.onClick.AddListener(OnUpgradeDamageButtonClick);
+    }
+
+    private void OnUpgradeHealthButtonClick()
+    {
+        OnUpgradeHealthClick?.Invoke();
+    }
+
+    private void OnUpgradeSpeedButtonClick()
+    {
+        OnUpgradeSpeedClick?.Invoke();
+    }
+
+    private void OnUpgradeDamageButtonClick()
+    {
+        OnUpgradeDamageClick?.Invoke();
+    }
+
+    private void OnDisable()
+    {
+        upgradeVitalityButton.onClick.RemoveListener(OnUpgradeHealthButtonClick);
+        upgradeDexterityButton.onClick.RemoveListener(OnUpgradeSpeedButtonClick);
+        upgradeStrengthButton.onClick.RemoveListener(OnUpgradeDamageButtonClick);
+    }
 }

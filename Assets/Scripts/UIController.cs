@@ -1,9 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UIController : MonoBehaviour
 {
+    public event Action OnUpgradeHealthClick;
+    public event Action OnUpgradeSpeedClick;
+    public event Action OnUpgradeDamageClick;
+    
     [SerializeField] 
     private GameObject background;
     [SerializeField] 
@@ -17,8 +22,16 @@ public class UIController : MonoBehaviour
 
     public void SetUp(PlayerSettingsSO settings)
     {
-        upgradeMenuController.SetUp(settings);
-        topPanelController.SetUp(0, settings.Health, settings.Health, settings.Speed, settings.Damage);
+        SetUp(0, settings.Health, settings.Damage, settings.Speed, 1, 1, 1, 
+            settings.FirstUpgradePrice, false, settings.Health);
+    }
+
+    public void SetUp(int coins, int health, int damage, int speed, int speedLevel, int damageLevel, int healthLevel,
+        int upgradePrice, bool upgradeButtonsInteractivity, int? currentHealth = null)
+    {
+        upgradeMenuController.SetUp(coins, health, damage, speed, healthLevel, damageLevel, speedLevel,
+            upgradePrice, upgradeButtonsInteractivity);
+        topPanelController.SetUp(coins, health, damage, speed, currentHealth);
     }
 
     public void ShowGameOver()
@@ -42,5 +55,39 @@ public class UIController : MonoBehaviour
     public void ChangeCurrentHealth(int health)
     {
         topPanelController.ChangeCurrentHealth(health);
+    }
+
+    public void EnableUpgrade()
+    {
+        upgradeMenuController.EnableUpgradeButtons(true);
+    }
+
+    private void Awake()
+    {
+        upgradeMenuController.OnUpgradeDamageClick += OnUpgradeDamage;
+        upgradeMenuController.OnUpgradeHealthClick += OnUpgradeHealth;
+        upgradeMenuController.OnUpgradeSpeedClick += OnUpgradeSpeed;
+    }
+
+    private void OnUpgradeHealth()
+    {
+        OnUpgradeHealthClick?.Invoke();
+    }
+
+    private void OnUpgradeSpeed()
+    {
+        OnUpgradeSpeedClick?.Invoke();
+    }
+
+    private void OnUpgradeDamage()
+    {
+        OnUpgradeDamageClick?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        upgradeMenuController.OnUpgradeDamageClick -= OnUpgradeDamage;
+        upgradeMenuController.OnUpgradeHealthClick -= OnUpgradeHealth;
+        upgradeMenuController.OnUpgradeSpeedClick -= OnUpgradeSpeed;
     }
 }

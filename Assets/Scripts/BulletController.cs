@@ -17,11 +17,6 @@ public class BulletController : MonoBehaviour
     
     private const string BorderTag = "Border";
 
-    private void Awake()
-    {
-        _transform = transform;
-    }
-
     public void Init(int damage, string target, float speed)
     {
         _damage = damage;
@@ -39,6 +34,16 @@ public class BulletController : MonoBehaviour
     {
         _transform.position = position;
         gameObject.SetActive(true);
+    }
+
+    public void ChangeDamage(int newDamage)
+    {
+        _damage = newDamage;
+    }
+
+    private void Awake()
+    {
+        _transform = transform;
     }
 
     private void Update()

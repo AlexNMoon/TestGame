@@ -16,7 +16,8 @@ public class PlayerController : MonoBehaviour, ITarget
     
     private float _speed;
     private float _rotationSpeed;
-    private int _health;
+    private int _currentHealth;
+    private int _healthMax;
     private int _damage;
     private float _bulletSpeed;
     private Transform _transform;
@@ -26,16 +27,16 @@ public class PlayerController : MonoBehaviour, ITarget
 
     public void ReceiveDamage(int damage)
     {
-        _health -= damage;
+        _currentHealth -= damage;
 
-        if (_health <= 0)
+        if (_currentHealth <= 0)
         {
             OnPlayerDamage?.Invoke(0);
             OnPlayerDeath?.Invoke();
         }
         else
         {
-            OnPlayerDamage?.Invoke(_health);
+            OnPlayerDamage?.Invoke(_currentHealth);
         }
     }
 
@@ -43,11 +44,32 @@ public class PlayerController : MonoBehaviour, ITarget
     {
         _speed = settings.Speed;
         _rotationSpeed = settings.RotationSpeed;
-        _health = settings.Health;
+        _currentHealth = settings.Health;
+        _healthMax = settings.Health;
         _damage = settings.Damage;
         _bulletSpeed = settings.BulletSpeed;
     }
-    
+
+    public void ChangeSpeed(int newSpeed)
+    {
+        _speed = newSpeed;
+    }
+
+    public void ChangeHealth(int newHealth)
+    {
+        _healthMax = newHealth;
+    }
+
+    public void ChangeDamage(int newDamage)
+    {
+        _damage = newDamage;
+
+        for (int i = 0; i < _bulletsPool.Count; i++)
+        {
+            _bulletsPool[i].ChangeDamage(_damage);
+        }
+    }
+
     private void Awake()
     {
         _transform = transform;

@@ -28,10 +28,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        _upgradeController = new UpgradeController(playerSettings);
         uiController.SetUp(playerSettings);
         InstantiatePlayer();
         InstantiateEnemy();
+        
+        _upgradeController = new UpgradeController(playerSettings);
+        _upgradeController.SetDependencies(uiController, _player);
     }
 
     private void InstantiatePlayer()
@@ -107,6 +109,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        _upgradeController.UnsubscribeEvents();
         _enemy.OnEnemyDeath -= OnEnemyDeath;
         _player.OnPlayerDeath -= OnPlayerDeath;
     }
