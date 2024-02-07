@@ -19,6 +19,6 @@ MonoBehaviour:
   HealthBonusPercent: 40
   DamageBoosterPercent: 25
   DamageBoosterTimer: 20
-  SpeedBoosterPercent: 200
+  SpeedBoosterPercent: 25
   SpeedBoosterTimer: 20
   DropItemProbability: 70

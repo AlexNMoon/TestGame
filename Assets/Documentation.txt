@@ -1,0 +1,37 @@
+Overall gameplay
+
+Controls - WASD for movement and left mouse button for shooting. 
+The player moves as a car or a vehicle - W and S move forwards and backwards while A and D rotate the player.
+There is one enemy on the field at any time. After killing the enemy, it spawn at a new location.
+The coins for killing the enemy are automatically added to the player.
+The enemy also can drop health recharge, damage booster and speed booster, which can be picked up.
+The damage booster and speed booster are active only for a specific time.
+By pressing the ESC button, the upgrade menu opens up, where the player can spend coins by upgrading stats.
+Note, that after any upgrade, the currently active boosters will be deactivated.
+If the player's health drops to 0, the game ends. There is no restart option at this time.
+
+
+Making changes to settings
+
+There is a possibility to easily change enemy and player settings. In the folder Assets/ScriptableObjects you can find
+two scriptable objects, one for player and one for enemy.
+The player scriptable object contains settings for movement, initial stats and upgrade settings.
+The enemy scriptable object contains settings for movement, damage, coins and items dropped by the enemy.
+
+
+Project contents
+
+The main class that is responsible for initiating the game is GameManager. It creates player and enemy instances,
+has reference to UIController and creates UpgradeController.
+UIController is responsible for showing data on UI. It has references to TopPanelController and UpgradeManuController.
+Any actions that need to be done with UI go through UI Controller.
+PlayerController is responsible for movement and shooting, as well as collecting boosters. GameManager is subscribed to 
+events for changes in player health and player death, and UpgradeController is subscribed for boosters collection.
+EnemyController is responsible for movement, shooting, boosters drop. GameManager is subscribed to the event of enemy death,
+and when it receives it, the GameManager forwards the coins to UpgradeManager and selects new location for the enemy.
+The bullets that the enemy and player use have the same script. This script doesn't need to know who it hit, as both
+EnemyController and PlayerController extend from ITarget interface. The BulletController knows the damage it needs to do,
+and passes it to the ITarget.
+UpgradeMenuController has only the visual representation of the stats. All the logic for actual upgrading is in 
+UpgradeController. UpgradeController sends commands to enable the upgrade buttons when the player has enough coins,
+it receives events about upgrade buttons being pressed from UIController. 
