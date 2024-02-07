@@ -12,13 +12,21 @@ public class EnemyController : MonoBehaviour, ITarget
     private BulletController bulletPrefab;
 
     private List<BulletController> _bulletsPool;
-    private int _damage = 20;
-    private float _bulletSpeed = 10;
-    private int _healthMax = 30;
-    private int _healthCurrent = 30;
+    private int _damage;
+    private float _bulletSpeed;
+    private int _healthMax;
+    private int _healthCurrent;
     private const string TargetTag = "Player";
     private Transform _transform;
     private GameObject _gameObject;
+
+    public void SetUp(EnemySettingsSO settings)
+    {
+        _damage = settings.Damage;
+        _bulletSpeed = settings.BulletSpeed;
+        _healthMax = settings.Health;
+        _healthCurrent = settings.Health;
+    }
 
     public void ReceiveDamage(int damage)
     {

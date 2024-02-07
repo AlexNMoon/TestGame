@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     private UIController uiController;
     [SerializeField] 
     private PlayerSettingsSO playerSettings;
+    [SerializeField] 
+    private EnemySettingsSO enemySettings;
 
     private PlayerController _player;
     private EnemyController _enemy;
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
     private void InstantiateEnemy()
     {
         _enemy = Instantiate(enemyPrefab, GetEnemyPosition(), Quaternion.identity);
+        _enemy.SetUp(enemySettings);
         _enemy.OnEnemyDeath += OnEnemyDeath;
     }
 

@@ -1379,6 +1379,7 @@ MonoBehaviour:
   fieldTransform: {fileID: 1032551921}
   uiController: {fileID: 1685541416}
   playerSettings: {fileID: 11400000, guid: fc2f6bbf9d227e3498134d38cec9fe10, type: 2}
+  enemySettings: {fileID: 11400000, guid: 87ba51fd3f4e42a45938d856a7c3cd59, type: 2}
 --- !u!4 &608414221
 Transform:
   m_ObjectHideFlags: 0
