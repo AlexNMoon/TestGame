@@ -1378,6 +1378,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 2870302283384179502, guid: c592c71ff1bb048478cbeb62201b9ada, type: 3}
   fieldTransform: {fileID: 1032551921}
   uiController: {fileID: 1685541416}
+  playerSettings: {fileID: 11400000, guid: fc2f6bbf9d227e3498134d38cec9fe10, type: 2}
 --- !u!4 &608414221
 Transform:
   m_ObjectHideFlags: 0

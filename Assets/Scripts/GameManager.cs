@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private Transform fieldTransform;
     [SerializeField] 
     private UIController uiController;
+    [SerializeField] 
+    private PlayerSettingsSO playerSettings;
 
     private PlayerController _player;
     private EnemyController _enemy;
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
     private void InstantiatePlayer()
     {
         _player = Instantiate(playerPrefab, _playerStartPosition, Quaternion.identity);
+        _player.SetUp(playerSettings);
         _player.OnPlayerDeath += OnPlayerDeath;
     }
 

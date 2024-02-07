@@ -13,12 +13,11 @@ public class PlayerController : MonoBehaviour, ITarget
     [SerializeField] 
     private BulletController bulletPrefab;
     
-    private float _speed = 4.0f;
-    private float _rotationSpeed = 100f;
-    private int _healthMax = 100;
-    private int _healthCurrent = 10;
-    private int _damage = 10;
-    private float _bulletSpeed = 10;
+    private float _speed;
+    private float _rotationSpeed;
+    private int _health;
+    private int _damage;
+    private float _bulletSpeed;
     private Transform _transform;
     private List<BulletController> _bulletsPool;
     
@@ -26,10 +25,19 @@ public class PlayerController : MonoBehaviour, ITarget
 
     public void ReceiveDamage(int damage)
     {
-        _healthCurrent -= damage;
+        _health -= damage;
         
-        if(_healthCurrent <= 0)
+        if(_health <= 0)
             OnPlayerDeath?.Invoke();
+    }
+
+    public void SetUp(PlayerSettingsSO settings)
+    {
+        _speed = settings.Speed;
+        _rotationSpeed = settings.RotationSpeed;
+        _health = settings.Health;
+        _damage = settings.Damage;
+        _bulletSpeed = settings.BulletSpeed;
     }
     
     private void Awake()
