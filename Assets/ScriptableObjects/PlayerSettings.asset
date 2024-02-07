@@ -17,3 +17,8 @@ MonoBehaviour:
   Health: 100
   Damage: 10
   BulletSpeed: 10
+  SpeedUpgradeIncrement: 1
+  HealthUpgradeIncrement: 20
+  DamageUpgradeIncrement: 5
+  FirstUpgradePrice: 100
+  UpgradePriceIncrement: 20

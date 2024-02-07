@@ -28,8 +28,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        uiController.SetUp(0, playerSettings.Health, playerSettings.Health, playerSettings.Damage,
-            playerSettings.Speed);
+        uiController.SetUp(playerSettings);
         InstantiatePlayer();
         InstantiateEnemy();
     }

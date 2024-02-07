@@ -12,10 +12,13 @@ public class UIController : MonoBehaviour
     private GameObject upgradeMenuPanel;
     [SerializeField] 
     private TopPanelController topPanelController;
+    [SerializeField] 
+    private UpgradeMenuController upgradeMenuController;
 
-    public void SetUp(int coinsAmount, int currentHealthAmount, int healthAmount, int strengthAmount, int dexterityAmount)
+    public void SetUp(PlayerSettingsSO settings)
     {
-        topPanelController.SetUp(coinsAmount, currentHealthAmount, healthAmount, strengthAmount, dexterityAmount);
+        upgradeMenuController.SetUp(settings);
+        topPanelController.SetUp(0, settings.Health, settings.Health, settings.Speed, settings.Damage);
     }
 
     public void ShowGameOver()
@@ -33,6 +36,7 @@ public class UIController : MonoBehaviour
     public void ChangeCoins(int coins)
     {
         topPanelController.SetCoins(coins);
+        upgradeMenuController.ChangeCoins(coins);
     }
 
     public void ChangeCurrentHealth(int health)

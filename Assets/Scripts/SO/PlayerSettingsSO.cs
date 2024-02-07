@@ -10,4 +10,9 @@ public class PlayerSettingsSO : ScriptableObject
     public int Health;
     public int Damage ;
     public float BulletSpeed;
+    public int SpeedUpgradeIncrement;
+    public int HealthUpgradeIncrement;
+    public int DamageUpgradeIncrement;
+    public int FirstUpgradePrice;
+    public int UpgradePriceIncrement;
 }
