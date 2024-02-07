@@ -10,16 +10,32 @@ public class EnemyController : MonoBehaviour, ITarget
     
     [SerializeField] 
     private BulletController bulletPrefab;
+    [SerializeField] 
+    private DroppableItemController healthItemPrefab;
+    [SerializeField] 
+    private BoosterItemController damageItemPrefab;
+    [SerializeField] 
+    private BoosterItemController speedItemPrefab;
 
     private List<BulletController> _bulletsPool;
+    private List<DroppableItemController> _healthItemsPool;
+    private List<BoosterItemController> _damageItemsPool;
+    private List<BoosterItemController> _speedItemsPool;
     private int _damage;
     private float _bulletSpeed;
     private int _healthMax;
     private int _healthCurrent;
     private int _droppedCoins;
-    private const string TargetTag = "Player";
+    private int _healthBonusPercent;
+    private int _damageBoosterPercent;
+    private int _damageBoosterTimer;
+    private int _speedBoosterPercent;
+    private int _speedBoosterTimer;
+    private int _dropItemProbability;
     private Transform _transform;
     private GameObject _gameObject;
+    
+    private const string TargetTag = "Player";
 
     public void SetUp(EnemySettingsSO settings)
     {
@@ -28,6 +44,12 @@ public class EnemyController : MonoBehaviour, ITarget
         _healthMax = settings.Health;
         _healthCurrent = settings.Health;
         _droppedCoins = settings.CoinsDroped;
+        _healthBonusPercent = settings.HealthBonusPercent;
+        _damageBoosterPercent = settings.DamageBoosterPercent;
+        _damageBoosterTimer = settings.DamageBoosterTimer;
+        _speedBoosterPercent = settings.SpeedBoosterPercent;
+        _speedBoosterTimer = settings.SpeedBoosterTimer;
+        _dropItemProbability = settings.DropItemProbability;
     }
 
     public void ReceiveDamage(int damage)
@@ -37,9 +59,93 @@ public class EnemyController : MonoBehaviour, ITarget
         if (_healthCurrent <= 0)
         {
             StopCoroutine(WaitToShootBullet());
+            DropItem();
             _gameObject.SetActive(false);
             OnEnemyDeath?.Invoke(_droppedCoins);
         }
+    }
+
+    private void DropItem()
+    {
+        if (DropItemAvailable())
+        {
+            switch (GetItemType())
+            {
+                case DroppableItemTypes.HealthRecharge:
+                    DropHealthItem();
+                    break;
+                case DroppableItemTypes.StrengthBooster:
+                    DropDamageItem();
+                    break;
+                case DroppableItemTypes.DexterityBooster:
+                    DropSpeedItem();
+                    break;
+            }
+        }
+    }
+
+    private bool DropItemAvailable()
+    {
+        int possibility = Random.Range(1, 101);
+        return possibility <= _dropItemProbability;
+    }
+
+    private DroppableItemTypes GetItemType()
+    {
+        return (DroppableItemTypes) Random.Range(0, 3) ;
+    }
+    
+    private void DropHealthItem()
+    {
+        DroppableItemController item = _healthItemsPool.Find(x => !x.gameObject.activeInHierarchy);
+
+        if (item == null)
+        {
+            item = Instantiate(healthItemPrefab, _transform.position, Quaternion.identity);
+            _healthItemsPool.Add(item);
+        }
+        else
+        {
+            item.ResetPosition(_transform.position);
+        }
+        
+        item.AddPercent = _healthBonusPercent;
+    }
+
+    private void DropDamageItem()
+    {
+        BoosterItemController item = _damageItemsPool.Find(x => !x.gameObject.activeInHierarchy);
+
+        if (item == null)
+        {
+            item = Instantiate(damageItemPrefab, _transform.position, Quaternion.identity);
+            _damageItemsPool.Add(item);
+        }
+        else
+        {
+            item.ResetPosition(_transform.position);
+        }
+
+        item.AddPercent = _damageBoosterPercent;
+        item.Timer = _damageBoosterTimer;
+    }
+    
+    private void DropSpeedItem()
+    {
+        BoosterItemController item = _speedItemsPool.Find(x => !x.gameObject.activeInHierarchy);
+
+        if (item == null)
+        {
+            item = Instantiate(speedItemPrefab, _transform.position, Quaternion.identity);
+            _speedItemsPool.Add(item);
+        }
+        else
+        {
+            item.ResetPosition(_transform.position);
+        }
+
+        item.AddPercent = _speedBoosterPercent;
+        item.Timer = _speedBoosterTimer;
     }
 
     public void ActivateEnemy(Vector3 location)
@@ -55,6 +161,10 @@ public class EnemyController : MonoBehaviour, ITarget
         _gameObject = gameObject;
         _transform = transform;
         _bulletsPool = new List<BulletController>();
+        _healthItemsPool = new List<DroppableItemController>();
+        _damageItemsPool = new List<BoosterItemController>();
+        _speedItemsPool = new List<BoosterItemController>();
+        
         StartCoroutine(WaitToShootBullet());
     }
 

@@ -9,4 +9,10 @@ public class EnemySettingsSO : ScriptableObject
     public float BulletSpeed;
     public int Health;
     public int CoinsDroped;
+    public int HealthBonusPercent;
+    public int DamageBoosterPercent;
+    public int DamageBoosterTimer;
+    public int SpeedBoosterPercent;
+    public int SpeedBoosterTimer;
+    public int DropItemProbability;
 }

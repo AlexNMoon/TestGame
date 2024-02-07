@@ -7,14 +7,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, ITarget
 {
     public event Action OnPlayerDeath;
-    public event Action<int> OnPlayerDamage; 
+    public event Action<int> OnPlayerHealthChange;
+    public event Action<int, int> OnSpeedBoosted;
+    public event Action<int, int> OnDamageBoosted;
 
     [SerializeField] 
     private Rigidbody playerRigidbody;
     [SerializeField] 
     private BulletController bulletPrefab;
     
-    private float _speed;
+    private int _speed;
     private float _rotationSpeed;
     private int _currentHealth;
     private int _healthMax;
@@ -31,12 +33,12 @@ public class PlayerController : MonoBehaviour, ITarget
 
         if (_currentHealth <= 0)
         {
-            OnPlayerDamage?.Invoke(0);
+            OnPlayerHealthChange?.Invoke(0);
             OnPlayerDeath?.Invoke();
         }
         else
         {
-            OnPlayerDamage?.Invoke(_currentHealth);
+            OnPlayerHealthChange?.Invoke(_currentHealth);
         }
     }
 
@@ -121,5 +123,52 @@ public class PlayerController : MonoBehaviour, ITarget
         
         Vector3 rotation = new Vector3(0f, x, 0f) * Time.deltaTime * _rotationSpeed;
         playerRigidbody.rotation = Quaternion.Euler(playerRigidbody.rotation.eulerAngles + rotation);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("DropItem"))
+            OnDropItemCollected(other.GetComponent<DroppableItemController>());
+    }
+
+    private void OnDropItemCollected(DroppableItemController itemController)
+    {
+        switch (itemController.Type)
+        {
+            case DroppableItemTypes.HealthRecharge:
+                AddHealth(itemController.AddPercent);
+                break;
+            case DroppableItemTypes.DexterityBooster:
+                BoosterItemController speedBooster = itemController as BoosterItemController;
+                if (speedBooster != null) 
+                    AddSpeed(speedBooster.AddPercent, speedBooster.Timer);
+                break;
+            case DroppableItemTypes.StrengthBooster:
+                BoosterItemController damageBooster = itemController as BoosterItemController;
+                if (damageBooster != null) 
+                    AddDamage(damageBooster.AddPercent, damageBooster.Timer);
+                break;
+        }
+        
+        itemController.HideItem();
+    }
+
+    private void AddHealth(int addPercent)
+    {
+        _currentHealth += Mathf.RoundToInt((_healthMax * addPercent) / 100);
+        if (_currentHealth > _healthMax)
+            _currentHealth = _healthMax;
+        
+        OnPlayerHealthChange?.Invoke(_currentHealth);
+    }
+
+    private void AddSpeed(int addPercent, int timer)
+    {
+        OnSpeedBoosted?.Invoke(addPercent, timer);
+    }
+
+    private void AddDamage(int addPercent, int timer)
+    {
+        OnDamageBoosted?.Invoke(addPercent, timer);
     }
 }

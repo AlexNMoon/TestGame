@@ -62,6 +62,16 @@ public class UIController : MonoBehaviour
         upgradeMenuController.EnableUpgradeButtons(true);
     }
 
+    public void ShowDamageBooster(int damageAmount, int timer)
+    {
+        topPanelController.ShowDamageBooster(damageAmount, timer);
+    }
+
+    public void ShowSpeedBooster(int speedAmount, int timer)
+    {
+        topPanelController.ShowSpeedBooster(speedAmount, timer);
+    }
+
     private void Awake()
     {
         upgradeMenuController.OnUpgradeDamageClick += OnUpgradeDamage;

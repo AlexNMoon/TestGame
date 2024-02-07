@@ -40,11 +40,11 @@ public class GameManager : MonoBehaviour
     {
         _player = Instantiate(playerPrefab, _playerStartPosition, Quaternion.identity);
         _player.SetUp(playerSettings);
-        _player.OnPlayerDamage += OnPlayerDamage;
+        _player.OnPlayerHealthChange += OnPlayerHealthChange;
         _player.OnPlayerDeath += OnPlayerDeath;
     }
 
-    private void OnPlayerDamage(int healthLeft)
+    private void OnPlayerHealthChange(int healthLeft)
     {
         uiController.ChangeCurrentHealth(healthLeft);
     }

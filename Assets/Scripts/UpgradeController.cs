@@ -20,6 +20,10 @@ public class UpgradeController
     private int _speedLevel = 1;
     private int _healthLevel = 1;
     private int _damageLevel = 1;
+    private bool _isDamageTimerOn;
+    private Coroutine _damageTimerCoroutine; 
+    private bool _isSpeedTimerOn;
+    private Coroutine _speedTimerCoroutine;
 
     private UIController _uiController;
     private PlayerController _playerController;
@@ -48,6 +52,8 @@ public class UpgradeController
         _uiController.OnUpgradeDamageClick += OnUpgradeDamage;
         _uiController.OnUpgradeHealthClick += OnUpgradeHealth;
         _uiController.OnUpgradeSpeedClick += OnUpgradeSpeed;
+        _playerController.OnDamageBoosted += OnDamageBoosted;
+        _playerController.OnSpeedBoosted += OnSpeedBoosted;
     }
 
     private void OnUpgradeDamage()
@@ -90,6 +96,60 @@ public class UpgradeController
         UpdateUIController();
     }
 
+    private void OnDamageBoosted(int addPercent, int timer)
+    {
+        _damageBonus = Mathf.RoundToInt((_damage * addPercent) / 100);
+        _playerController.ChangeDamage(_damage + _damageBonus);
+        _uiController.ShowDamageBooster(_damage + _damageBonus, timer);
+        
+        if(_isDamageTimerOn)
+            _playerController.StopCoroutine(_damageTimerCoroutine);
+        
+        _damageTimerCoroutine = _playerController.StartCoroutine(DamageTimer(timer));
+    }
+
+    private IEnumerator DamageTimer(int seconds)
+    {
+        _isDamageTimerOn = true;
+        float timeRemaining = seconds;
+        
+        while (timeRemaining > 0)
+        {
+            yield return new WaitForEndOfFrame();
+            timeRemaining -= Time.deltaTime;
+        }
+        
+        _isDamageTimerOn = false;
+        _playerController.ChangeDamage(_damage);
+    }
+
+    private void OnSpeedBoosted(int addPercent, int timer)
+    {
+        _speedBonus = Mathf.RoundToInt((_speed * addPercent) / 100);
+        _playerController.ChangeSpeed(_speed + _speedBonus);
+        _uiController.ShowSpeedBooster(_speed + _speedBonus, timer);
+        
+        if(_isSpeedTimerOn)
+            _playerController.StopCoroutine(_speedTimerCoroutine);
+        
+        _speedTimerCoroutine = _playerController.StartCoroutine(SpeedTimer(timer));
+    }
+    
+    private IEnumerator SpeedTimer(int seconds)
+    {
+        _isSpeedTimerOn = true;
+        float timeRemaining = seconds;
+        
+        while (timeRemaining > 0)
+        {
+            yield return new WaitForEndOfFrame();
+            timeRemaining -= Time.deltaTime;
+        }
+        
+        _isSpeedTimerOn = false;
+        _playerController.ChangeSpeed(_speed);
+    }
+
     public int IncrementCoins(int addedCoins)
     {
         _currentCoins += addedCoins;
@@ -105,5 +165,7 @@ public class UpgradeController
         _uiController.OnUpgradeDamageClick -= OnUpgradeDamage;
         _uiController.OnUpgradeHealthClick -= OnUpgradeHealth;
         _uiController.OnUpgradeSpeedClick -= OnUpgradeSpeed;
+        _playerController.OnDamageBoosted -= OnDamageBoosted;
+        _playerController.OnSpeedBoosted -= OnSpeedBoosted;
     }
 }

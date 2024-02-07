@@ -63,7 +63,6 @@ public class BulletController : MonoBehaviour
         {
             SetInactive();
             other.GetComponent<ITarget>()?.ReceiveDamage(_damage);
-            Debug.Log("Hit player!");
         }
     }
 
